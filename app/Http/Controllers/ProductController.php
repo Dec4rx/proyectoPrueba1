@@ -141,15 +141,15 @@ class ProductController extends Controller
 
 
         $product = Product::find($request->product_id);
-        $product->name = $request->name;
-        $product->image = $request->file('image')->move('images/', $filename, 'public');
-        $product->price = $request->price;
-        $product->description = $request->description;
-        $product->rate = $request->rate;
-        $product->quantity = $request->quantity;
-        $product->deliverTime = $request->deliverTime;
-        $product->category_id = $request->category_id;
-        $product->brand_id = $request->brand_id;
+        $product->name = $request->name ?? $product->name;
+        $product->image = $request->file('image')->move('images/', $filename, 'public') ?? $product->name;
+        $product->price = $request->price ?? $product->price;
+        $product->description = $request->description ?? $product->description;
+        $product->rate = $request->rate ?? $product->rate;
+        $product->quantity = $request->quantity ?? $product->quantity;
+        $product->deliverTime = $request->deliverTime ?? $product->deliverTime;
+        $product->category_id = $request->category_id ?? $product->category_id;
+        $product->brand_id = $request->brand_id ?? $product->brand_id;
         $product->save();
     }
 
