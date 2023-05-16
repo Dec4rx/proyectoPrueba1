@@ -147,7 +147,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/create_category', [CategoryController::class, 'create_category']); //Ok
 
     //Eliminar Categoría
-    Route::post('/delete_category/{id}', [CategoryController::class, 'delete_category']); //Ok
+    Route::delete('/delete_category/{id}', [CategoryController::class, 'delete_category']); //Ok
 
     ////Product
     //Crear producto

@@ -80,10 +80,11 @@ const ModifyProduct = () => {
       console.log('SIIIIIIIIIIIIIIIIIIIIIIIII')
 
     }).catch(error => {
+      console.log('NOOOOOOOOOOOOOOOOOO')
       console.log(error)
       setFormOk(false);
       setTextError('Verify the data');
-      console.log('NOOOOOOOOOOOOOOOOOO')
+      
     });
   }
 
@@ -98,6 +99,7 @@ const ModifyProduct = () => {
           'Authorization': `Bearer ${token}`
         }
       }).then(res => {
+        console.log('formdata', formValue, category_id, brand_id, image )
         console.log(res.data)
         setCategory(res.data)
       })
@@ -312,6 +314,7 @@ const ModifyProduct = () => {
                   onChange={onChange}
                 />
                 <br />
+                <Form.Label>Description:</Form.Label>
                 <Form.Control as='textarea'
                   name="description"
                   rows={7} value={formValue.description}
