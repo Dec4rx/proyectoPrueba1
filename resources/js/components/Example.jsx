@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-function Example() {
+const Example = () => {
     return (
         <div className="container">
             <div className="row justify-content-center">
@@ -24,7 +24,7 @@ if (document.getElementById('example')) {
 
     Index.render(
         <React.StrictMode>
-            <Example/>
+            <Example />
         </React.StrictMode>
     )
 }

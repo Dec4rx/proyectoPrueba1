@@ -18,7 +18,7 @@ class AuthController extends Controller
             'last_name' => 'required|alpha|max:100',
             'birth' => 'required|date_format:Y-m-d',
             'gender' => 'required',
-            'phone' => 'required|max:10',
+            'phone' => 'required|max:10|regex:/^[0-9()+-]+$/',
             'email' => 'required|email',
             'password' => ['required', Password::min(8)->mixedCase()->numbers()]
         ]);

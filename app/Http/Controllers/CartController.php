@@ -14,10 +14,9 @@ class CartController extends Controller
         return response('deleted');
     }
 
-    public function delete_product(Request $request)
-    {
-        Cart::where('product_id', $request->product_id)
-        ->where('user_id', $request->user_id)
-        ->delete();
+    public function delete_product($id){
+        $s = Cart::find($id);
+        $s -> delete();
+        return response('deleted');
     }
 }

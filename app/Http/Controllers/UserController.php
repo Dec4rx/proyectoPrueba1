@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
 use Illuminate\Http\Request;
 
 use App\Models\User;
@@ -14,7 +15,12 @@ class UserController extends Controller
     //Permite cambiar y almacenar una nueva imagen para el usuario
     public function add_image(Request $request)
     {
-        $filename = date('His') . 'user' . $request->user_id;
+        $request->validate([
+            'user_id' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
+
+        $filename = date('His') . 'user-' . $request->user_id . '.' . $request->file('image')->getClientOriginalExtension();
 
         $user = User::find($request->user_id);
         $user->image = $request->file('image')->move('images/', $filename, 'public');
@@ -65,6 +71,7 @@ class UserController extends Controller
                 'image' => $product->image,
                 'rate' => $product->rate,
                 'category' => Category::find($product->category_id)->name,
+                'brand' => Brand::find($product->brand_id)->name
             ];
         }
         return response()->json($p);

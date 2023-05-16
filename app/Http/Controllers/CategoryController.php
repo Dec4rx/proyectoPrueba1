@@ -53,4 +53,22 @@ class CategoryController extends Controller
         ];
         return response()->json($c);
     }
+
+    public function showCategoriesWithSubcategories()
+    {
+        $categories = [];
+        foreach(Category::all() as $cat){
+            $categories[] = [
+                "id" => $cat->id,
+                "name" => $cat->name,
+                "category_id" => $cat->category_id
+            ];
+        }
+        return response()->json($categories);
+    }
+
+    public function info_category($id){
+        $category = Category::find($id);
+        return response()->json($category);
+    }
 }

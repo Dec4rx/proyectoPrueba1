@@ -15,6 +15,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|max:100',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             'price' => 'required|numeric|min:1',
             'description' => 'required|min:20',
             'rate' => 'numeric',
@@ -24,7 +25,7 @@ class ProductController extends Controller
             'brand_id' => 'required|numeric|min:1',
         ]);
 
-        $filename = date('His') . 'product:' . $request->name;
+        $filename = date('His') . 'product-' . $request->name . '.' . $request->file('image')->getClientOriginalExtension();
 
         $product = new Product();
         $product->name = $request->name;
@@ -42,19 +43,66 @@ class ProductController extends Controller
     public function show_specific_product($id)
     {
         $product = Product::find($id);
-        return response()->json($product);
+        $p = [];
+        $categoryDad = Category::find($product->category_id)->categoryDad;
+        $categoryDad_name = $categoryDad ? $categoryDad->name : null;
+        $p[] = [
+            'id' => $product->id,
+            'name' => $product->name,
+            'price' => $product->price,
+            'rate' => $product->rate,
+            'description' => $product->description,
+            'quantity' => $product->quantity,
+            'image' => $product->image,
+            'deliverTime' => $product->deliverTime,
+            'category_name' => Category::find($product->category_id)->name,
+            'category_id' => $product->category_id,
+            'categoryDad_id' => Category::find($product->category_id)->category_id,
+            'categoryDad_name' => $categoryDad_name,
+            'brand_name' => Brand::find($product->brand_id)->name,
+            'brand_id' => $product->brand_id,
+        ];
+        return response()->json($p);
+        // return response()->json($product);
     }
 
     public function delete_product($id)
     {
         $product = Product::find($id);
-        $product -> delete();
+        $product->delete();
         return response('deleted');
     }
 
     public function show_products()
     {
         $products = Product::where('enable', true)->get();
+        $p = [];
+        foreach ($products as $product) {
+            $categoryDad = Category::find($product->category_id)->categoryDad;
+            $categoryDad_name = $categoryDad ? $categoryDad->name : null;
+            $p[] = [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'rate' => $product->rate,
+                'description' => $product->description,
+                'quantity' => $product->quantity,
+                'image' => $product->image,
+                'deliverTime' => $product->deliverTime,
+                'category_name' => Category::find($product->category_id)->name,
+                'category_id' => $product->category_id,
+                'categoryDad_id' => Category::find($product->category_id)->category_id,
+                'categoryDad_name' => $categoryDad_name,
+                'brand_name' => Brand::find($product->brand_id)->name,
+                'brand_id' => $product->brand_id,
+            ];
+        }
+        return response()->json($p);
+    }
+
+    public function show_products_3($category_id)
+    {
+        $products = Product::where('category_id', $category_id)->where('enable', true)->limit(3)->get();
         $p = [];
         foreach ($products as $product) {
             $p[] = [
@@ -66,8 +114,10 @@ class ProductController extends Controller
                 'quantity' => $product->quantity,
                 'image' => $product->image,
                 'deliverTime' => $product->deliverTime,
-                'category_id' => Category::find($product->category_id)->name,
-                'brand_id' => Brand::find($product->brand_id)->name
+                'category_name' => Category::find($product->category_id)->name,
+                'category_id' => $product->category_id,
+                'brand_name' => Brand::find($product->brand_id)->name,
+                'brand_id' => $product->brand_id,
             ];
         }
         return response()->json($p);
@@ -75,21 +125,24 @@ class ProductController extends Controller
 
     public function update_product(Request $request)
     {
-
-        $request->validate([
-            'name' => 'required|max:100',
-            'price' => 'required|numeric|min:1',
-            'description' => 'required|min:20',
+        $request->validate([    
+            'name' => 'max:100',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'price' => 'numeric|min:1',
+            'description' => 'min:20',
             'rate' => 'numeric',
-            'quantity' => 'required|numeric',
-            'deliverTime' => 'required|numeric|min:1',
-            'category_id' => 'required|numeric|min:1',
-            'brand_id' => 'required|numeric|min:1',
-            'product_id' => 'required|numeric|min:1',
+            'quantity' => 'numeric',
+            'deliverTime' => 'numeric|min:1',
+            'category_id' => 'numeric|min:1',
+            'brand_id' => 'numeric|min:1',
         ]);
+
+        $filename = date('His') . 'product-' . $request->name . '.' . $request->file('image')->getClientOriginalExtension();
+
 
         $product = Product::find($request->product_id);
         $product->name = $request->name;
+        $product->image = $request->file('image')->move('images/', $filename, 'public');
         $product->price = $request->price;
         $product->description = $request->description;
         $product->rate = $request->rate;
@@ -100,9 +153,10 @@ class ProductController extends Controller
         $product->save();
     }
 
-    public function update_product_img(Request $request){
+    public function update_product_img(Request $request)
+    {
         $product = Product::find($request->product_id);
-        $filename = date('His') . 'product:' . $request->name;
+        $filename = date('His') . 'product-' . $request->name . '.' . $request->file('image')->getClientOriginalExtension();
         $product->image = $request->file('image')->move('images/', $filename, 'public');
         $product->save();
     }

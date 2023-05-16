@@ -22,4 +22,15 @@ class BrandController extends Controller
         $brand = Brand::find($id);
         $brand-> delete();
     }
+
+    public function show_brand(){
+        $brands = [];
+        foreach(Brand::all() as $cat){
+            $brands[] = [
+                "id" => $cat->id,
+                "name" => $cat->name,
+            ];
+        }
+        return response()->json($brands);
+    }
 }

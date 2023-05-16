@@ -8,13 +8,15 @@ use Illuminate\Support\Carbon;
 
 class WishlistController extends Controller
 {
-    public function clear_wishlist($id){
-        Wishlist::where('user_id',$id)->delete();
+    public function delete_product($id){
+        $s = Wishlist::find($id);
+        $s -> delete();
         return response('deleted');
     }
 
-    public function delete_product(Request $request){
-        Wishlist::where('product_id',$request->product_id)->where('user_id',$request->user_id)->delete();
+    public function clear_cart($id){
+        Wishlist::where('user_id',$id)->delete();
+        return response('deleted');
     }
 
     public function add_wishlist(Request $request){
