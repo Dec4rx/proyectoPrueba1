@@ -137,7 +137,7 @@ const SearchResult = () => {
                         className="w-100"
                         controlId="maxCost"
                         min={10}
-                        max={3000}
+                        max={1000}
                         onChange={(e) => setQuery(e.target.value)}
                     />
                     <p>Max cost: ${query}</p>
